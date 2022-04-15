@@ -1,7 +1,7 @@
 import Docker from 'dockerode';
 import TelegramClient from './telegram';
 // @ts-ignore
-import * as JSONStream from 'JSONStream';
+import JSONStream from 'jsonstream2';
 import getTemplate from './templates';
 
 const {ONLY_WHITELIST} = process.env;
