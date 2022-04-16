@@ -1,11 +1,23 @@
-FROM node:12-alpine
+FROM node:12-alpine as build
 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN mkdir -p /usr/app
+WORKDIR /usr/app
 
-COPY package.json package-lock.json /usr/src/app/
+COPY package.json package-lock.json /usr/app/
 RUN npm install && npm cache clean --force
-COPY . /usr/src/app
+COPY . .
+RUN npm run build
 
-HEALTHCHECK CMD ["npm", "run", "healthcheck"]
-CMD ["npm", "run", "start"]
+FROM node:12-alpine as prod
+ENV NODE_ENV=production
+
+WORKDIR /app
+
+COPY --from=build /usr/app/dist /app
+COPY --from=build /usr/app/package.json /app/
+COPY --from=build /usr/app/package-lock.json /app/
+
+RUN npm install --only=production && npm cache clean --force
+
+HEALTHCHECK CMD ["node", "app.js", "healthcheck"]
+CMD ["node", "app.js"]
