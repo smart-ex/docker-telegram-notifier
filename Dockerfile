@@ -1,14 +1,14 @@
-FROM node:12-alpine as build
+FROM node:16-alpine as build
 
 RUN mkdir -p /usr/app
 WORKDIR /usr/app
 
 COPY package.json package-lock.json /usr/app/
-RUN npm install && npm cache clean --force
+RUN npm install
 COPY . .
 RUN npm run build
 
-FROM node:12-alpine as prod
+FROM node:16-alpine as prod
 ENV NODE_ENV=production
 
 WORKDIR /app

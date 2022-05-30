@@ -1,6 +1,5 @@
 import Docker from 'dockerode';
 import TelegramClient from './telegram';
-// @ts-ignore
 import JSONStream from 'jsonstream2';
 import getTemplate from './templates';
 
@@ -16,7 +15,6 @@ export type TEvent = {
 }
 
 async function sendEvent(event: TEvent) {
-  // console.debug(event);
   const template = getTemplate(event)
   if (template) {
     const label = event.Actor && event.Actor.Attributes && event.Actor.Attributes['telegram-notifier.monitor'];
